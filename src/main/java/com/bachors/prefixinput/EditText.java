@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 
 /**
  * @author Ican Bachors
- * @version 1.0
+ * @version 1.1
  * Issues: https://github.com/bachors/Android-Prefix-Input/issues
  */
 
@@ -16,20 +16,25 @@ public class EditText extends android.support.v7.widget.AppCompatEditText {
 
     public EditText(Context context) {
         super(context);
-        this.prefix = rubah(this.getText().toString().trim(), true);
+        this.prefix = this.getText().toString().trim();
         init();
     }
 
     public EditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.prefix = rubah(this.getText().toString().trim(), true);
+        this.prefix = this.getText().toString().trim();
         init();
     }
 
     public EditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.prefix = rubah(this.getText().toString().trim(), true);
+        this.prefix = this.getText().toString().trim();
         init();
+    }
+
+    public void setPrefix(String s) {
+        this.prefix = s.trim();
+        setText(s);
     }
 
     private void init() {
@@ -39,26 +44,26 @@ public class EditText extends android.support.v7.widget.AppCompatEditText {
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                fix = rubah(s.toString(), true).replaceAll(prefix, "");
+                fix = s.toString().replace(prefix, "");
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String string = rubah(s.toString(), true);
+                String string = s.toString();
                 int fl = prefix.length();
                 int sl = string.length();
                 if(sl < fl){
-                    String in = rubah(prefix, false);
+                    String in = prefix;
                     setText(in);
                     setSelection(in.length());
                 }else {
                     String cek = string.substring(0,fl);
                     if(!cek.equals(prefix)) {
-                        if(string.matches(prefix)) {
-                            String in = rubah(prefix + string.replaceAll(prefix, ""), false);
+                        if(string.matches(rubah(prefix))) {
+                            String in = prefix + string.replace(prefix, "");
                             setText(in);
                             setSelection(in.length());
                         }else{
-                            String in = rubah(prefix + fix, false);
+                            String in = prefix + fix;
                             setText(in);
                             setSelection(in.length());
                         }
@@ -68,12 +73,8 @@ public class EditText extends android.support.v7.widget.AppCompatEditText {
         });
     }
 
-    private String rubah(String s, boolean b) {
-        if(b) {
-            s = s.replace("+", "BACHORStambah").replace("$", "BACHORSdollar").replace("^", "BACHORShalis").replace("*", "BACHORSbintang").replace("?", "BACHORStanya");
-        } else {
-            s = s.replace("BACHORStambah", "+").replace("BACHORSdollar", "$").replace("BACHORShalis", "^").replace("BACHORSbintang", "*").replace("BACHORStanya", "?");
-        }
+    private String rubah(String s) {
+        s = s.replace("+", "\\+").replace("$", "\\$").replace("^", "\\^").replace("*", "\\*").replace("?", "\\?");
         return s;
     }
 }
