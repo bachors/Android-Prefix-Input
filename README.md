@@ -1,5 +1,9 @@
 # Android-Prefix-Input
+<<<<<<< HEAD
 Android library adding a prefix to an EditText.
+=======
+Android Library EditText Prefix Input
+>>>>>>> ce043093f87675defcae76176b9a893f01faad45
 
 ![gif](http://i.giphy.com/l4CD0bVB0KWl5PXLq.gif)
 
@@ -16,7 +20,11 @@ allprojects {
 ```
 dependencies {
     ...
+<<<<<<< HEAD
     compile 'com.github.bachors:Android-Prefix-Input:1.1'
+=======
+    compile 'com.github.bachors:Android-Prefix-Input:1.0'
+>>>>>>> ce043093f87675defcae76176b9a893f01faad45
 }
 ```
 
@@ -37,6 +45,7 @@ Usage
 	android:layout_height="wrap_content"
 	android:inputType="number" />
 ```
+<<<<<<< HEAD
 Option
 ------
 set text programmatically (dynamic)
@@ -55,6 +64,8 @@ EditText username = (EditText) findViewById(R.id.username);
 
 username.setPrefix("123_");
 ```
+=======
+>>>>>>> ce043093f87675defcae76176b9a893f01faad45
 
 MIT
 -----
