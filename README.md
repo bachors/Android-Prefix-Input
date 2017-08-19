@@ -6,6 +6,14 @@ Android Library EditText Prefix Input
 Gradle
 ------
 ```
+allprojects {
+   repositories {
+      ...
+      maven { url 'https://jitpack.io' }
+   }
+}
+```
+```
 dependencies {
     ...
     compile 'com.github.bachors:Android-Prefix-Input:1.0'
