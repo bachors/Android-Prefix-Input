@@ -1,4 +1,7 @@
 # Android-Prefix-Input
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-PrefixInput-red.svg?style=flat)](https://android-arsenal.com/details/1/6069)
+[![Release](https://jitpack.io/v/bachors/Android-Prefix-Input.svg)](https://jitpack.io/#bachors/Android-Prefix-Input)
+
 Android library adding a prefix to an EditText.
 
 ![gif](http://i.giphy.com/l4CD0bVB0KWl5PXLq.gif)
