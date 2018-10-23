@@ -1,8 +1,8 @@
 package com.bachors.prefixinput;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 
 /**
@@ -12,69 +12,68 @@ import android.util.AttributeSet;
  */
 
 public class EditText extends android.support.v7.widget.AppCompatEditText {
-    private String prefix, fix;
+
+    private float mOriginalLeftPadding = -1;
+    private String mPrefix;
 
     public EditText(Context context) {
         super(context);
-        this.prefix = this.getText().toString().trim();
-        init();
+        init(context, null);
     }
 
     public EditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.prefix = this.getText().toString().trim();
-        init();
+        init(context, attrs);
     }
 
     public EditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.prefix = this.getText().toString().trim();
-        init();
+        init(context, attrs);
     }
 
-    public void setPrefix(String s) {
-        this.prefix = s.trim();
-        setText(s);
+    private void init(Context context, AttributeSet attributeSet) {
+        if(attributeSet != null){
+            TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.EditText);
+            mPrefix = typedArray.getString(R.styleable.EditText_prefix);
+            typedArray.recycle();
+        }
     }
 
-    private void init() {
-        addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                fix = s.toString().replace(prefix, "");
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String string = s.toString();
-                int fl = prefix.length();
-                int sl = string.length();
-                if(sl < fl){
-                    String in = prefix;
-                    setText(in);
-                    setSelection(in.length());
-                }else {
-                    String cek = string.substring(0,fl);
-                    if(!cek.equals(prefix)) {
-                        if(string.matches(rubah(prefix))) {
-                            String in = prefix + string.replace(prefix, "");
-                            setText(in);
-                            setSelection(in.length());
-                        }else{
-                            String in = prefix + fix;
-                            setText(in);
-                            setSelection(in.length());
-                        }
-                    }
-                }
-            }
-        });
+    public void setPrefix(String prefix){
+        mPrefix = prefix;
+        invalidate();
     }
 
-    private String rubah(String s) {
-        s = s.replace("+", "\\+").replace("$", "\\$").replace("^", "\\^").replace("*", "\\*").replace("?", "\\?");
-        return s;
+    public String getPrefix(){
+        return mPrefix;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        if(mPrefix != null){
+            calculatePrefix();
+            canvas.drawText(mPrefix, mOriginalLeftPadding,getLineBounds(0, null), getPaint());
+        }
+    }
+
+    private void calculatePrefix() {
+        if (mOriginalLeftPadding == -1) {
+            float[] widths = new float[mPrefix.length()];
+            getPaint().getTextWidths(mPrefix, widths);
+            float textWidth = 0;
+            for (float w : widths) {
+                textWidth += w;
+            }
+            mOriginalLeftPadding = getCompoundPaddingLeft();
+            setPadding((int) (textWidth + mOriginalLeftPadding),
+                    getPaddingRight(), getPaddingTop(),
+                    getPaddingBottom());
+        }
+    }
+
+    public String getCompletedText(){
+        return mPrefix + getText().toString();
     }
 }
